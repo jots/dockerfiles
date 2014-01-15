@@ -1,3 +1,4 @@
+## -*- docker-image-name: "joe/roundcube" -*-
 FROM    joe/ubuntu-13.10
 MAINTAINER Joe McDonald <joe@vpop.net>
 # based on https://github.com/Joeboy/dockerfiles
