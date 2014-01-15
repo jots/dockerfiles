@@ -1,4 +1,4 @@
-from joe/ubuntu13.10
+from jots/ubuntu-13.10
 # based on https://github.com/noteed/docker-postfix
 maintainer Joe McDonald <joe@vpop.net>
 
@@ -33,7 +33,20 @@ run newaliases
 
 # Use syslog-ng to get Postfix logs (rsyslog uses upstart which does not seem
 # to run within Docker).
-run apt-get install -q -y syslog-ng
+# syslog-ng no workie on 13.10: 
+# https://bugs.launchpad.net/ubuntu/+source/syslog-ng/+bug/1242173
+#run apt-get install -y syslog-ng
 
-expose 25
-cmd ["sh", "-c", "service syslog-ng start ; service postfix start ; tail -F /var/log/mail.log"]
+# so let's try rsyslog... I think it needs crond
+run apt-get install -y rsyslog
+
+ADD supervisord-crond.conf /etc/supervisor/conf.d/
+ADD supervisord-rsyslogd.conf /etc/supervisor/conf.d/
+ADD supervisord-postfix.conf /etc/supervisor/conf.d/
+
+# mail, ssh, supervisord-web
+expose 25 587 22 9001
+CMD /usr/bin/supervisord -n -c /etc/supervisor/supervisord.conf
+
+
+#cmd ["sh", "-c", "service syslog-ng start ; service postfix start ; tail -F /var/log/mail.log"]
