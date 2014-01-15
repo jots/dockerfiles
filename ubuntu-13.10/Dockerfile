@@ -36,7 +36,6 @@ RUN (apt-get install -y -q openssh-server && mkdir -p /var/run/sshd)
 RUN (sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config && sed -ri 's/#UsePAM no/UsePAM no/g' /etc/ssh/sshd_config)
 ADD  supervisord-sshd.conf /etc/supervisor/conf.d/
 
-
 # copy over dotfiles from github
 
 # expose and start
